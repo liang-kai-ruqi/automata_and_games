@@ -1,0 +1,63 @@
+\begin{thebibliography}{10}
+
+\bibitem{Part1976}
+Richard~B. Austin.
+\newblock Impartial and partisan games.
+\newblock {\em Mathematics and Statistics, University of Calgary}, 1976.
+
+\bibitem{WinningWays}
+Elwyn~R. Berlekamp, John~H. Conway, and Richard~K. Guy.
+\newblock {\em Winning Ways for Your Mathematical Plays}.
+\newblock Academic Press, London, 1982.
+\newblock Four volumes; second edition, A K Peters, Natick, MA, 2001--2004.
+
+\bibitem{ONAG}
+John~H. Conway.
+\newblock {\em On Numbers and Games}.
+\newblock Number~6 in L.M.S. Monographs. Academic Press, London, 1976.
+\newblock Second edition, A K Peters, Natick, MA, 2001.
+
+\bibitem{PartOctal1987}
+Aviezri~S. Fraenkel and Anton Kotzig.
+\newblock Partizan octal games: Partizan subtraction games.
+\newblock {\em International Journal of Game Theory}, 16(2):145--154, 1987.
+
+\bibitem{Octal1956}
+Richard~K. Guy and Cedric A.~B. Smith.
+\newblock The g-values of various games.
+\newblock {\em Mathematical Proceedings of the Cambridge Philosophical
+  Society}, 52(3):514--526, 1956.
+
+\bibitem{HopcroftUllman}
+John~E. Hopcroft and Jeffrey~D. Ullman.
+\newblock {\em Introduction to Automata Theory, Languages, and Computation}.
+\newblock Addison-Wesley, Reading, MA, 1979.
+
+\bibitem{2004Hexa}
+S.~Howse and Richard~J. Nowakowski.
+\newblock Periodicity and arithmetic-periodicity in hexadecimal games.
+\newblock {\em Theoretical Computer Science}, 313(3):463--472, 2004.
+
+\bibitem{LiangFA}
+Kai Liang.
+\newblock A finite automaton approach to combinatorial games, 2026.
+\newblock Preprint.
+
+\bibitem{MisQuot2006}
+Thane~E. Plambeck and Aaron~N. Siegel.
+\newblock Mis{\`e}re quotients for impartial games.
+\newblock {\em Journal of Combinatorial Theory, Series A}, 115(4):593--622,
+  2008.
+\newblock arXiv:math/0609825.
+
+\bibitem{PartMisQuot2007}
+Aaron~N. Siegel.
+\newblock Mis{\`e}re canonical forms of partizan games, 2007.
+
+\bibitem{SiegelCGT}
+Aaron~N. Siegel.
+\newblock {\em Combinatorial Game Theory}, volume 146 of {\em Graduate Studies
+  in Mathematics}.
+\newblock American Mathematical Society, Providence, RI, 2013.
+
+\end{thebibliography}

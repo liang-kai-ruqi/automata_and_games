@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: octal_numbers_en_v2.aux
+Reallocating 'name_of_file' (item size: 1) to 6 items.
+The style file: plain.bst
+Reallocating 'name_of_file' (item size: 1) to 14 items.
+Database file #1: octal_numbers.bib
+You've used 11 entries,
+            2118 wiz_defined-function locations,
+            578 strings with 5573 characters,
+and the built_in function-call counts, 3010 in all, are:
+= -- 296
+> -- 118
+< -- 2
++ -- 49
+- -- 36
+* -- 187
+:= -- 520
+add.period$ -- 36
+call.type$ -- 11
+change.case$ -- 47
+chr.to.int$ -- 0
+cite$ -- 11
+duplicate$ -- 117
+empty$ -- 259
+format.name$ -- 36
+if$ -- 624
+int.to.chr$ -- 0
+int.to.str$ -- 11
+missing$ -- 13
+newline$ -- 60
+num.names$ -- 22
+pop$ -- 59
+preamble$ -- 1
+purify$ -- 40
+quote$ -- 0
+skip$ -- 77
+stack$ -- 0
+substring$ -- 157
+swap$ -- 14
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 36
+warning$ -- 0
+while$ -- 30
+width$ -- 13
+write$ -- 126

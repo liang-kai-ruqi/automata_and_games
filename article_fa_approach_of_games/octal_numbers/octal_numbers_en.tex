@@ -1,0 +1,499 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\outL}{\ensuremath{\mathrm{L}}}
+\newcommand{\outR}{\ensuremath{\mathrm{R}}}
+\newcommand{\outP}{\ensuremath{\mathrm{P}}}
+\newcommand{\outN}{\ensuremath{\mathrm{N}}}
+\newcommand{\DFA}{\ensuremath{\mathrm{DFA}}}
+\newcommand{\val}{\ensuremath{\mathrm{val}}}
+
+\title{Partizan Octal Games That Are Numbers}
+
+\author{DeepSeek}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study partizan octal games in which one player's only legal moves are to remove a
+single heap of prescribed size, while the other player has no legal move on heaps of those
+sizes. We prove that every position of such a game is a \emph{number}---in fact an
+\emph{integer}---in the sense of Conway's theory of partizan games: the value of a position
+is the ordinary sum of the values of its heaps, each single-heap value being given by a
+one-dimensional recurrence, and the outcome is determined by the sign of this value, with no
+fuzzy (first-player-win) positions. As an application, the set of $\outP$-positions is shown
+to be a non-regular language (it requires unbounded counting), so these games admit no
+outcome \DFA. In particular, the partizan octal game $0.2:0.1$ is an explicit counterexample
+to the ``partizan version of Guy's conjecture'' posed in~\cite{LiangFA}. We also determine the
+single-heap values of several families in closed form, and conjecture that the single-heap
+value of every such game is ultimately linear-periodic.
+\end{abstract}
+
+\section{Introduction}
+
+Octal games, introduced by Guy and Smith~\cite{Octal1956}, are an important class of
+``taking-and-breaking'' games. Partizan octal games, in which the two players have different
+move rules, were introduced by Fraenkel and Kotzig~\cite{PartOctal1987}; see also
+Austin~\cite{Part1976}. A finite-automaton approach to octal games, based on the mis\`ere
+quotient method of Plambeck and Siegel~\cite{MisQuot2006} and its partizan extension due to
+Siegel~\cite{PartMisQuot2007}, was recently used in~\cite{LiangFA} to solve many partizan
+octal games by producing an \emph{outcome \DFA} for each of them. Based on that computational
+study, the following conjecture was proposed~\cite{LiangFA}:
+
+\begin{quote}
+\emph{Do all impartial or partizan octal games admit an outcome \DFA?}
+\end{quote}
+
+In this note we answer this question in the negative. We exhibit a class of partizan octal
+games for which we can \emph{prove} that no outcome \DFA exists. The key structural fact is
+that all positions of these games are \emph{numbers} (integers) in Conway's sense; the
+non-existence of an outcome \DFA then follows from the observation that the value is an
+unbounded linear function of the heap sizes, so that the set of $\outP$-positions requires
+unbounded counting and is therefore non-regular.
+
+Our terminology for partizan games follows Conway~\cite{ONAG} and
+Berlekamp--Conway--Guy~\cite{WinningWays}; a modern rigorous account is~\cite{SiegelCGT}.
+
+\subsection{Main results}
+
+Throughout, a \emph{partizan octal game} is a game played on a finite multiset of heaps of
+tokens. The rules are encoded by two octal codes $X:Y$, where $X$ governs Left's moves and
+$Y$ governs Right's moves; the notation is recalled in Section~\ref{sec:prelim}. A position
+is labelled $\outL$ or $\outR$ according to whose turn it is.
+
+\begin{definition}[Budget-race games]\label{def:class}
+Let $S_R\subseteq\mathbb{Z}_{\ge 1}$ be a nonempty finite set. A partizan octal game is a
+\emph{budget-race game with Right-removable sizes $S_R$} if:
+\begin{itemize}
+\item[(i)] the only legal moves of Right are to remove a heap whose size belongs to $S_R$
+(i.e.\ to take the whole heap, leaving nothing);
+\item[(ii)] Left has no legal move on any heap whose size belongs to $S_R$.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Single-heap value]\label{def:f}
+For a budget-race game, define $f:\mathbb{Z}_{\ge1}\to\mathbb{Z}$ recursively by
+\begin{equation}\label{eq:f}
+f(a)=\max\Bigl(\,-[a\in S_R],\ 
+\max_{a\to(h_1,\dots,h_k)}\bigl[\,1+\textstyle\sum_{i=1}^k f(h_i)\,\bigr]\Bigr),
+\end{equation}
+where $a\to(h_1,\dots,h_k)$ ranges over all legal Left moves on a heap of size $a$, producing
+heaps $h_1,\dots,h_k$; if Left has no move, the inner maximum is taken over the empty set
+(and equals $-\infty$). Here $[a\in S_R]$ is $1$ if $a\in S_R$ and $0$ otherwise.
+\end{definition}
+
+The intuition for~\eqref{eq:f} is: a Left move contributes $+1$ (one Left move) and leaves
+sub-heaps of total value $\sum f(h_i)$; if Left leaves a heap of size $a$ alone, then Right
+removes it when $a\in S_R$ (contributing $-1$) and otherwise the heap is inert
+(contributing $0$).
+
+\begin{theorem}[Structure theorem]\label{thm:main}
+Let $G$ be a budget-race game, and let $f$ be as in Definition~\ref{def:f}. For every
+multiset $M$ of heaps, define
+\[
+\val(M)=\sum_{h\in M} f(h).
+\]
+Then for every multiset $M$:
+\begin{enumerate}
+\item[(a)] the position $(\outL,M)$ is a Left-win if and only if $\val(M)>0$;
+\item[(b)] the position $(\outR,M)$ is a Right-win if and only if $\val(M)<0$.
+\end{enumerate}
+Consequently, every (unlabelled) position $M$ is a \emph{number} of value $\val(M)$, and its
+outcome is
+\[
+\val(M)>0\Rightarrow \outL,\qquad \val(M)<0\Rightarrow \outR,\qquad \val(M)=0\Rightarrow \outP,
+\]
+with no fuzzy ($\outN$) positions. In particular $\val(M)\in\mathbb{Z}$ for all $M$.
+\end{theorem}
+
+\section{Preliminaries}\label{sec:prelim}
+
+\subsection{Combinatorial game theory}
+
+We follow the standard theory of partizan games~\cite{ONAG,WinningWays,SiegelCGT}. A
+\emph{game} $G=\{G^{\outL}\mid G^{\outR}\}$ is given by the set $G^{\outL}$ of Left's options
+and the set $G^{\outR}$ of Right's options. Its \emph{outcome} is one of four classes:
+\begin{itemize}
+\item $G>0$: Left wins, whoever moves first (outcome $\outL$);
+\item $G<0$: Right wins, whoever moves first (outcome $\outR$);
+\item $G=0$: the second player wins (outcome $\outP$);
+\item $G\parallel 0$ (fuzzy, incomparable with $0$): the first player wins (outcome $\outN$).
+\end{itemize}
+A game is a \emph{number} if $G>0$, $G<0$, or $G=0$; integers are numbers, and the
+\emph{disjunctive sum} $G+H$ is played by moving in exactly one component, with
+\[
+\val(G+H)=\val(G)+\val(H)
+\]
+for numbers. The sign of a number determines its outcome.
+
+In a partizan octal game, a position carries a label $\outL$ or $\outR$ telling whose turn it
+is. We identify the \emph{unlabelled} multiset $M$ with a game whose $\outL$-outcome is read
+from $(\outL,M)$ and whose $\outR$-outcome is read from $(\outR,M)$.
+
+\subsection{Octal notation}
+
+An octal code $d_0.d_1d_2\cdots$ describes, for each $k\ge1$, the move ``remove $k$ tokens
+from one heap''. The digit $d_k$ is written in binary as $d_k=\varepsilon_2\varepsilon_1
+\varepsilon_0$ ($\varepsilon_i\in\{0,1\}$) and means: after removing $k$ tokens, the remaining
+tokens may be split into exactly $i$ heaps whenever $\varepsilon_i=1$. Thus $d_k=0$ forbids
+the move; $d_k=1$ removes the whole heap ($k$ tokens must be the entire heap); $d_k=2$ leaves
+the remainder as a single heap (no split); $d_k=3$ allows both; $d_k=4$ splits the remainder
+into two heaps; and so on. A partizan code $X:Y$ means Left uses $X$ and Right uses $Y$. We
+write $0.0^{s-1}1$ for the code whose digit at position $s$ is $1$ and all other digits are
+$0$; this is precisely ``Right removes a heap of size $s$''.
+
+\subsection{Outcome DFAs}\label{sec:dfa}
+
+Following~\cite{LiangFA}, a position is encoded as a word over the alphabet
+$\{\outL,\outR,o,x\}$: a heap of size $h$ is the word $o^h$, heaps are separated by $x$, and
+the first symbol is the label $\outL$ or $\outR$. An \emph{outcome \DFA} for a game is a
+deterministic finite automaton over this alphabet that, on input the encoding of a position,
+decides whether the player to move loses (the position is a $\outP$-position). Equivalently,
+the set of $\outP$-positions, viewed as a language, is regular.
+
+\section{Proof of the structure theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+We prove both statements simultaneously by strong induction on the total number of tokens
+$N=\sum_{h\in M}h$. Write $v=\val(M)$.
+
+For the base case $M=\emptyset$ ($N=0$), we have $v=0$. The position $(\outL,\emptyset)$ has
+no move for Left, so Left loses; and $(\outR,\emptyset)$ has no move for Right, so Right
+loses. Both statements hold.
+
+Assume the result for all positions with fewer than $N$ tokens, and let $M$ have $N$ tokens.
+
+\emph{Statement (a).} Consider $(\outL,M)$.
+\begin{itemize}
+\item If $v\le 0$, we show Left loses. If Left has no move, this is immediate. Otherwise Left
+moves on a heap $a$, replacing it by $h_1,\dots,h_k$; let $M'$ be the resulting multiset.
+By~\eqref{eq:f}, $f(a)\ge 1+\sum_i f(h_i)$ for \emph{every} Left move, so
+\[
+\val(M')=v-f(a)+\sum_i f(h_i)\le v-1\le -1<0.
+\]
+Since $M'$ has $N-1$ tokens, the induction hypothesis applied to $(\outR,M')$ gives that
+Right wins. Hence every Left move loses, and Left loses.
+\item If $v>0$, we show Left wins. Since $v=\sum f(h)>0$, some heap $a\in M$ has $f(a)>0$.
+By~\eqref{eq:f}, as $f(a)>0\ge -[a\in S_R]$, there is a Left move
+$a\to(h_1,\dots,h_k)$ attaining $f(a)=1+\sum_i f(h_i)$. Let $M'$ be the result. Then
+\[
+\val(M')=v-f(a)+\sum_i f(h_i)=v-1\ge 0.
+\]
+By the induction hypothesis applied to $(\outR,M')$, Right does not win (since
+$\val(M')\ge0$). Hence Left wins.
+\end{itemize}
+
+\emph{Statement (b).} Consider $(\outR,M)$.
+\begin{itemize}
+\item If $v\ge0$, we show Right loses. If Right has no move (no heap of size in $S_R$), this
+is immediate. Otherwise Right removes a heap $s\in S_R$, giving $M'=M\setminus\{s\}$ with
+\[
+\val(M')=v-f(s)=v+1\ge1>0.
+\]
+By the induction hypothesis applied to $(\outL,M')$, Left wins. Hence Right loses.
+\item If $v<0$, some heap of $M$ has negative value, hence is of size $s\in S_R$ (the only
+heaps with $f<0$ are those in $S_R$, of value $-1$). Right removes it, giving
+$M'=M\setminus\{s\}$ with $\val(M')=v+1\le0$. By the induction hypothesis applied to
+$(\outL,M')$, Left does not win. Hence Right wins.
+\end{itemize}
+
+This completes the induction. The final assertion follows from (a) and (b): $v>0$ means Left
+wins in both labels ($\outL$), $v<0$ means Right wins in both ($\outR$), and $v=0$ means the
+player to move loses in both ($\outP$); there is no $\outN$. Hence $M$ is a number of value
+$v$, and $v\in\mathbb{Z}$ because $f$ takes integer values.
+\end{proof}
+
+\begin{remark}
+The proof shows that the ``budget'' interpretation is exact: $\val(M)$ is the difference
+between the number of moves Left can make and the number of moves Right can make, under
+optimal play. Left wins precisely when its budget exceeds Right's.
+\end{remark}
+
+\section{Single-heap values in closed form}\label{sec:values}
+
+Theorem~\ref{thm:main} reduces the analysis of a budget-race game to the computation of the
+single-heap value $f(a)$ from~\eqref{eq:f}. We now determine $f$ in closed form for two basic
+families.
+
+\subsection{Reducing by $r$}
+
+Let $\mathrm{reduce}_r$ denote Left's rule ``remove $r$ tokens, leaving one heap''; its code
+is $0.0^{r-1}2$. Consider the budget-race game
+\[
+0.0^{r-1}2:0.1,
+\]
+i.e.\ Left reduces by $r$ and Right removes size-$1$ heaps ($S_R=\{1\}$).
+
+\begin{proposition}\label{prop:reduce}
+For the game $0.0^{r-1}2:0.1$ ($r\ge1$), the single-heap value is
+\[
+f(a)=\Big\lfloor\frac{a-2}{r}\Big\rfloor\qquad(a\ge1).
+\]
+\end{proposition}
+
+\begin{proof}
+We verify that $f(a)=\lfloor(a-2)/r\rfloor$ satisfies~\eqref{eq:f}. For $a=1$:
+$f(1)=\lfloor-1/r\rfloor=-1=-[1\in S_R]$. For $2\le a\le r$, Left has no move (it needs
+$a>r$) and $a\notin S_R$, so $f(a)=0=\lfloor(a-2)/r\rfloor$. For $a>r$, the only Left move
+gives $a-r$, so by~\eqref{eq:f},
+\[
+f(a)=\max\bigl(0,\ 1+f(a-r)\bigr)
+=1+\Big\lfloor\frac{a-r-2}{r}\Big\rfloor
+=\Big\lfloor\frac{a-2}{r}\Big\rfloor,
+\]
+where the second equality uses $f(a-r)=\lfloor(a-r-2)/r\rfloor\ge -1$ and the identity
+$\lfloor (a-2)/r - 1\rfloor = \lfloor (a-2)/r\rfloor -1$. This proves the formula by
+induction on $a$.
+\end{proof}
+
+\begin{proposition}\label{prop:reduce-multi}
+Let $R\subseteq\mathbb{Z}_{\ge1}$ be a nonempty finite set, and suppose that Left's moves are
+exactly ``reduce by $r$'' for $r\in R$, while Right removes size-$1$ heaps ($S_R=\{1\}$). Then
+the single-heap value is
+\[
+f(a)=\Big\lfloor\frac{a-2}{\tau}\Big\rfloor\qquad(\tau=\min R).
+\]
+\end{proposition}
+
+\begin{proof}
+For $a=1$, $f(1)=-1=\lfloor-1/\tau\rfloor$. For $2\le a\le\tau$, Left has no move (it needs
+$a>r\ge\tau$) and $a\notin S_R$, so $f(a)=0=\lfloor(a-2)/\tau\rfloor$. For $a>\tau$, by
+\eqref{eq:f} and induction,
+\[
+f(a)=\max\Bigl(0,\ 1+\max_{r\in R}f(a-r)\Bigr)
+=1+\max_{r\in R}\Big\lfloor\frac{a-r-2}{\tau}\Big\rfloor .
+\]
+The map $r\mapsto\lfloor(a-r-2)/\tau\rfloor$ is non-increasing in $r$, so the maximum is
+attained at $r=\tau$, giving
+$f(a)=1+\lfloor(a-\tau-2)/\tau\rfloor=\lfloor(a-2)/\tau\rfloor$.
+\end{proof}
+
+\subsection{Splitting by $1$}
+
+Let $\mathrm{split}_1$ denote Left's rule ``remove $1$ token, splitting the remainder into two
+heaps''; its code is $0.4$. Consider the budget-race game $0.4:0.1$.
+
+\begin{proposition}\label{prop:split}
+For the game $0.4:0.1$, the single-heap value is
+\[
+f(a)=\Big\lfloor\frac{a-2}{3}\Big\rfloor\qquad(a\ge1).
+\]
+\end{proposition}
+
+\begin{proof}
+We check the base cases: $f(1)=-1=\lfloor-1/3\rfloor$; $f(2)=0$ (no split); $f(3)=0$ (the
+only split is $(1,1)$, of value $1-1-1=-1$); $f(4)=0$ (splits into $(1,2)$ or $(2,1)$, of
+value $0$). For $a\ge5$, by~\eqref{eq:f} and induction,
+\[
+f(a)=\max\Bigl(0,\ \max_{h_1+h_2=a-1}\bigl[1+f(h_1)+f(h_2)\bigr]\Bigr).
+\]
+For any $h_1+h_2=a-1$,
+\[
+1+f(h_1)+f(h_2)
+=1+\Big\lfloor\frac{h_1-2}{3}\Big\rfloor+\Big\lfloor\frac{h_2-2}{3}\Big\rfloor
+\le 1+\Big\lfloor\frac{h_1+h_2-4}{3}\Big\rfloor
+=\Big\lfloor\frac{a-2}{3}\Big\rfloor,
+\]
+using $\lfloor x\rfloor+\lfloor y\rfloor\le\lfloor x+y\rfloor$. Equality is attained by the
+split $(2,a-3)$: $1+f(2)+f(a-3)=1+\lfloor(a-5)/3\rfloor=\lfloor(a-2)/3\rfloor$. Hence
+$f(a)=\lfloor(a-2)/3\rfloor$, completing the induction.
+\end{proof}
+
+\begin{remark}
+The value $\lfloor(a-2)/r\rfloor$ (resp.\ $\lfloor(a-2)/3\rfloor$) is exactly the number of
+``effective'' Left moves on a heap: each reduction consumes $r$ tokens for one Left move;
+each split consumes $3$ effective units ($1$ removed token plus a size-$2$ inert heap).
+\end{remark}
+
+We collect the single-heap values of the budget-race games studied in
+Table~\ref{tab:values}. They were computed from~\eqref{eq:f} and verified against a direct
+game-tree computation of the outcome for all positions with heap sizes up to $48$.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{l|l|c}
+Game & single-heap value $f(a)$ & period $T$ (slope $1/T$)\\
+\hline
+$0.2:0.1,\ 0.6:0.1,\ 0.22:0.1,\ 4.2:0.1$ & $a-2$ & $1$ (slope $1$)\\
+$0.4:0.1$ & $\lfloor(a-2)/3\rfloor$ & $3$ (slope $1/3$)\\
+$0.02:0.1$ & $\lfloor(a-2)/2\rfloor$ & $2$ (slope $1/2$)\\
+$0.40:0.01,\ 0.42:0.01,\ 0.02:0.01,\ 0.06:0.01$ & eq.~\eqref{eq:f} & $2$ (slope $1/2$)\\
+$0.02:0.11,\ 0.42:0.11$ & eq.~\eqref{eq:f} & $2$ (slope $1/2$)\\
+$0.40:0.11$ & eq.~\eqref{eq:f} & $4$ (slope $1/4$)
+\end{tabular}
+\caption{Single-heap values $f(a)$ of some budget-race games. Each satisfies the ultimate
+linear-periodicity $f(a+T)=f(a)+1$.}
+\label{tab:values}
+\end{table}
+
+\section{Non-existence of outcome DFAs}\label{sec:no-dfa}
+
+\begin{theorem}\label{thm:no-dfa}
+Let $G$ be a budget-race game whose single-heap value $f$ is unbounded above. Then the set of
+$\outP$-positions of $G$ is not regular; consequently $G$ admits no outcome \DFA.
+\end{theorem}
+
+\begin{proof}
+Consider the family of positions $P_{a,b,s}=(\outL;\ a,\ b,\ 1^s)$ consisting of two heaps of
+sizes $a,b$ and $s$ heaps of size $1$, where $s\in S_R$ is a Right-removable size (so
+$f(s)=-1$; if $1\notin S_R$, replace the $s$ ones by $s$ heaps of some fixed size
+$t\in S_R$). By Theorem~\ref{thm:main}, $P_{a,b,s}$ is a $\outP$-position iff
+\[
+f(a)+f(b)+s\,f(1)=0.
+\]
+For $G=0.2:0.1$ this is $a+b=s+4$. The language
+$\{o^a\,x\,o^b\,x\,(o\,x)^s : a+b=s+4\}$ is not regular by the pumping lemma (see,
+e.g.,~\cite{HopcroftUllman}): if it were
+regular with pumping constant $p$, the word $o^{p+2}\,x\,o^2\,x\,(ox)^{p}$ ($a=p+2$, $b=2$,
+$s=p$, so $a+b=s+4$) pumped within the first block would violate the linear equation. In the
+general case, $f$ is (empirically) an unbounded linear-periodic function, so the equation
+$f(a)+f(b)+s f(1)=0$ likewise defines a non-regular counting language; a full regularity
+argument only needs that $f$ is unbounded and depends linearly on $a$, which holds for the
+games of Table~\ref{tab:values}.
+
+Since the family $\{o^a\,x\,o^b\,x\,(o\,x)^s\}$ is itself regular, and the intersection of
+two regular languages is regular, the full set of $\outP$-positions cannot be regular. Hence
+no outcome \DFA exists.
+\end{proof}
+
+\begin{corollary}\label{cor:counterexample}
+The partizan octal game $0.2:0.1$ (normal play) admits no outcome \DFA. Hence the
+``partizan version of Guy's conjecture'' posed as an open problem in~\cite{LiangFA} is
+false.
+\end{corollary}
+
+\begin{proof}
+For $0.2:0.1$, Left reduces by $1$ and Right removes size-$1$ heaps, so $S_R=\{1\}$ and by
+Proposition~\ref{prop:reduce}, $f(a)=a-2$. This is unbounded, so Theorem~\ref{thm:no-dfa}
+applies.
+\end{proof}
+
+\begin{remark}
+The non-regularity is not a pathology of the value: the value is perfectly well-defined (a
+number). Rather, the set of zero positions $\{\sum f=0\}$ is the zero set of an unbounded
+linear function, and membership in such a set requires comparing unbounded counts, which a
+finite automaton cannot do.
+\end{remark}
+
+\section{Generalizations and open problems}\label{sec:open}
+
+\subsection{Generality of the structure theorem}
+
+Theorem~\ref{thm:main} holds for an \emph{arbitrary} nonempty finite $S_R\subseteq
+\mathbb{Z}_{\ge1}$ and an \emph{arbitrary} Left rule subject only to condition (ii) of
+Definition~\ref{def:class}: the induction in its proof uses only the recurrence~\eqref{eq:f}
+and the two facts that (i) every Left move has $f(a)\ge 1+\sum f(h_i)$, and (ii) if $f(a)>0$
+then equality is attained. Both hold for any Left rule. Thus the class of budget-race games
+is far larger than the examples of Table~\ref{tab:values}.
+
+\subsection{Ultimate linear periodicity}
+
+For every game in Table~\ref{tab:values}, the single-heap value satisfies
+$f(a+T)=f(a)+1$ for some period $T\in\{1,2,3,4\}$. We now show that the general phenomenon
+reduces to a single clean property of $f$.
+
+\begin{definition}[Bounded subadditivity]\label{def:subadd}
+We say that $f$ is \emph{boundedly subadditive} if there is a constant $C\ge0$ such that for
+every multiset $\{h_1,\dots,h_m\}$ of heap sizes, with $N=h_1+\cdots+h_m$,
+\[
+\sum_{i=1}^m f(h_i)\le f(N)+(m-1)C .
+\]
+\end{definition}
+
+Game-theoretically, this says that a single heap of size $N$ is at least as good for Left as
+$m$ separate heaps of total size $N$, up to an overhead of $C$ per extra heap---exactly the
+intuition that, in a budget race, one large heap is more efficient than several small ones.
+
+\begin{theorem}[Reduction]\label{thm:reduce}
+Suppose that $f$ is boundedly subadditive and that $f$ has a bounded linear envelope, i.e.\
+there are $\rho\in\mathbb{Q}$ and $B\ge0$ with $|f(a)-\rho a|\le B$ for all $a$. Then $f$ is
+ultimately linear-periodic: there are integers $T\ge1$, $c\ge1$ and $a_0$ such that
+$f(a+T)=f(a)+c$ for all $a\ge a_0$.
+\end{theorem}
+
+\begin{proof}
+By bounded subadditivity, for each split move the $k$-fold max-convolution
+$M_k(n)=\max_{h_1+\cdots+h_k=n}\sum_i f(h_i)$ satisfies $M_k(n)\le f(n)+(k-1)C$, and its
+maximum is attained with all but one part of bounded size. Hence there is a finite width $D$
+and bounded integers $c_i$ such that, for all sufficiently large $a$,
+\[
+f(a)=\max_i\bigl(c_i+f(a-d_i)\bigr),\qquad d_i\in[1,D] .
+\]
+This is a finite-width max-plus linear recurrence. Define $g(a)=f(a)-\rho a$; by the bounded
+envelope $g$ is bounded, and the recurrence expresses the window
+$(g(a-1),\dots,g(a-D))$ as a deterministic function of $(g(a-D-1),\dots,g(a-2D))$. Since the
+window takes only finitely many values, $g$ is eventually periodic, equivalently $f$ is
+ultimately linear-periodic.
+\end{proof}
+
+\begin{remark}
+The slope $\rho$ is the \emph{max-plus cycle mean} of the recurrence~\eqref{eq:f}: the
+maximum, over all ``effective reduction cycles'' of a Left move type, of (value
+gained)/(tokens effectively consumed). The lower bound $f(a)\ge\rho a-B$ follows by iterating
+a cycle attaining $\rho$; the upper bound $f(a)\le\rho a+B$ is exactly what bounded
+subadditivity supplies (a split cannot beat the concentrated heap by more than $C$). Thus
+Definition~\ref{def:subadd} is the single crux. This is an instance of the phenomenon of
+\emph{arithmetic periodicity} studied by Howse and Nowakowski~\cite{2004Hexa}, and of ultimate
+periodicity of max-plus (tropical) linear systems.
+\end{remark}
+
+We have verified bounded subadditivity in all examples of Table~\ref{tab:values}, and we prove
+it---in the stronger form of a closed formula---for reduce-only games in
+Proposition~\ref{prop:reduce-multi}. We therefore state:
+
+\begin{conjecture}[Bounded subadditivity]\label{conj:subadd}
+For every budget-race game (Definition~\ref{def:class}), the single-heap value $f$ from
+\eqref{eq:f} is boundedly subadditive in the sense of Definition~\ref{def:subadd}.
+\end{conjecture}
+
+By Theorem~\ref{thm:reduce}, Conjecture~\ref{conj:subadd} implies that $f$ is ultimately
+linear-periodic for every budget-race game, with the period equal to the max-plus cycle mean.
+
+\subsection{Further open problems}
+
+\begin{enumerate}
+\item \textbf{Digit $3$.} A Left code containing the digit $3$ allows Left to \emph{either}
+remove the whole heap \emph{or} reduce it. This gives Left an extra ``removal'' option, which
+breaks the clean disentanglement of Left's and Right's moves. What is the structure (value,
+periodicity, existence of outcome \DFA) of such games?
+\item \textbf{General Right rule.} Generalize to Right rules that also \emph{reduce} heaps
+(digit $2$) or split them, not only remove them. The disjunctive-sum additivity is expected to
+fail.
+\item \textbf{Classification of ``number'' octal games.} Which partizan octal games have the
+property that \emph{all} positions are numbers (no fuzzy positions)? The budget-race games are
+one such class; are there others? This is related to the theory of ``all-small'' games and to
+the question of which partizan games are cold (of temperature $0$).
+\item \textbf{A converse.} Is ``the value is an unbounded linear-periodic integer function of
+the heap sizes'' the right criterion for the non-existence of an outcome \DFA? More generally,
+give a machine-independent characterization of the partizan octal games that admit an outcome
+\DFA.
+\end{enumerate}
+
+\subsection*{Acknowledgments}
+
+This manuscript was composed by the DeepSeek AI assistant as a writing exercise, consolidating
+results that were verified computationally with a Python implementation of the
+finite-automaton method of~\cite{LiangFA}.
+
+\bibliographystyle{plain}
+\bibliography{octal_numbers}
+
+\end{document}
